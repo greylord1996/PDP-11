@@ -3,13 +3,11 @@
 #include <bitset>
 
 
-
-
-
 Parser::Parser()
 {
 
 }
+
 
 Parser::~Parser()
 {
@@ -37,8 +35,8 @@ void Parser::CheckLastBit() //Word VS Byte checking
         this->flagOn15Bit = WORD;
 
     std::cout << "flagOn15Bit = " << this->flagOn15Bit << std::endl;
-
 }
+
 
 void Parser::CountOperands()
 {
@@ -63,7 +61,6 @@ void Parser::CountOperands()
     }
 
     std::cout << "flagOnOperandsNumber = " << this->flagOnOperandsNumber << std::endl;
-
 }
 
 
@@ -74,13 +71,16 @@ void Parser::CountOperands()
 
 
 
-//*********************************************BRANCH_CONDITIONAL_CASE_BEGIN**********************************************************************//
-void Parser::GetOpcodeInBranchOpCase() //Da zdes ya pishu kak pidor, no mne pochuy. Codes in manual PDP11. ATTENTION the same codes in man
+//********************************************************************BRANCH_CONDITIONAL_CASE_BEGIN****************************************************************************//
+
+
+void Parser::GetOpcodeInBranchOpCase()
 {
     this->opcode = (this->instruction_name) >> 8;
     binary_format = std::bitset<8>(this->opcode).to_string(); //to binary
     std::cout << "Binary opcode format in branch is " << binary_format << std::endl;
 }
+
 
 void Parser::GetOffsetInBranchOpCase()
 {
@@ -89,17 +89,18 @@ void Parser::GetOffsetInBranchOpCase()
 
     binary_format = std::bitset<8>(this->offset).to_string();
     std::cout << "Binary offset format in branch is " << binary_format << std::endl;
-
-
 }
 
-//***************************************************BRANCH_CONDITIONAL_CASE_END*********************************************************
+
+//*********************************************************************BRANCH_CONDITIONAL_CASE_END*****************************************************************************//
 
 
+                                                                                                                            /*!!!!!!!!!!!!!*/
 
 
+//************************************************************************SINGLE_OPERATION_CASE_BEGIN***************************************************************************//
 
-//**************************************************SINGLE_OPERATION_CASE_BEGIN*****************************************************************//
+
 void Parser::GetOpcodeInSingleOpCase()
 {
     this->opcode = (this->instruction_name & 0xFFC0) >> 6; //1111111111000000
@@ -125,10 +126,14 @@ void Parser::GetArgs_1InSingleCase()
 }
 
 
-//**************************************************SINGLE_OPERATION_CASE_END******************************************************************
+//*********************************************************************SINGLE_OPERATION_CASE_END********************************************************************************//
 
 
-//**************************************************DOUBLE_OPERATION_CASE_BEGIN*******************************************************************
+                                                                                                                            /*!!!!!!!!!!!!!*/
+
+
+//********************************************************************DOUBLE_OPERATION_CASE_BEGIN******************************************************************************//
+
 
 void Parser::GetOpcodeInDoubleOpCase()
 {
@@ -163,14 +168,17 @@ void Parser::GetArg_2_InDoubleOpCase()
     this->arg_2 = (this->instruction_name & 0x7);
     binary_format = std::bitset<4>(this->arg_2).to_string(); //to binary
     std::cout << "Binary format of arg_2 is " << binary_format << std::endl;
-
 }
-//*************************************************DOUBLE_OPERATION_CASE_END******************************************************************
 
 
+//*********************************************************************DOUBLE_OPERATION_CASE_END*******************************************************************************//
 
 
-//************************************************DOUBLE_REGISTER_OPERATION_CASE**********************************************************
+                                                                                                                            /*!!!!!!!!!!!!!*/
+
+
+//*************************************************************DOUBLE_REGISTER_OPERATION_CASE_BEGIN**************************************************************************//
+
 
 void Parser::GetOpcodeInDoubleRegOpCase()
 {
@@ -202,7 +210,12 @@ void Parser::GetArg_2_InDoubleRegOpCase()
 
 }
 
-//************************************************DOUBLE_REGISTER_OPERATION_CASE**********************************************************
+
+//*************************************************************DOUBLE_REGISTER_OPERATION_CASE_END****************************************************************************//
+
+
+//*********************************************************************************ALGORITHM***************************************************************************************//
+
 
 void Parser::MakeParse()
 {
