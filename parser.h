@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cstdint>
+#include <instruction.h>
 
 enum wordVersusbyte{WORD, BYTE}; //The symbol "0" or "1" in an opcode refers to a 0 for the word version of the instrucion and 1 for the byte version of the instruction
 
@@ -9,8 +10,20 @@ enum INSTRUCTION_TYPE{SINGLE_OP_INSTR, DOUBLE_OP_REG_INSTR, DOUBLE_OP_INSTR, CON
 class Parser
 {
 public:
+
+
+
+
+//    friend class Instruction;
+//    friend class SingleOpInstruction;
+//    friend class DoubleOpInstruction;
+//    friend class DoubleOpRegInstruction;
+//    friend class ConditionalInstruction;
+
+
     Parser();
     ~Parser();
+
     std::string binary_format; // for debug
 
     uint16_t instruction_name;
@@ -20,6 +33,10 @@ public:
     uint16_t mode_2;
     uint16_t arg_2;
     uint16_t offset;
+
+
+
+
 
 
 
@@ -57,7 +74,7 @@ public:
     void GetArg_2_InDoubleOpCase();
 
     /*Algorithm for parsing*/
-    void MakeParse();
+    Instruction *MakeParse();
 
 
 };

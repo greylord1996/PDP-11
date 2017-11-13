@@ -18,7 +18,11 @@ int main()
     Parser parser(instruction);
 
 
+    //Instruction* instr;
     parser.MakeParse();
+    //instr->ExecuteInstruction();
+    //instr->who_am_i();
+    //instr->who_am_i();
 
     return 0;
 }
