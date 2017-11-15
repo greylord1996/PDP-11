@@ -217,7 +217,7 @@ void Parser::GetArg_2_InDoubleRegOpCase()
 //*********************************************************************************ALGORITHM***************************************************************************************//
 
 
-Instruction* Parser::MakeParse()
+Instruction* Parser::HandleInstruction()
 {
     Instruction* instr;
     PrintInstruction();
@@ -227,52 +227,36 @@ Instruction* Parser::MakeParse()
     {
         case(SINGLE_OP_INSTR):
         {
-            std::cout << "start_point!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             GetOpcodeInSingleOpCase();
             GetModeInSingleCase();
             GetArgs_1InSingleCase();
-            std::cout << "break\n";
             SingleOpInstruction single_op_instruction(this->opcode, this->mode_1, this->arg_1);
-            //single_op_instruction.ExecuteInstruction();
-            //return &single_op_instruction;
-            instr = &single_op_instruction;
-            instr->ExecuteInstruction();
-//            std::cout << "end_point############################\n";
+            single_op_instruction.ExecuteInstruction();
             break;
         }
 
         case(DOUBLE_OP_REG_INSTR):
         {
-            std::cout << "start_point!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             GetOpcodeInDoubleRegOpCase();
             GetArg_1_InDoubleRegOpCase();
             GetMode_2_InDoubleRegOpCase();
             GetArg_2_InDoubleRegOpCase();
-            std::cout << "break\n";
             DoubleOpRegInstruction double_op_reg_instruction(this->opcode, this->arg_1, this->mode_2, this->arg_2);
-            //double_op_reg_instruction.ExecuteInstruction();
-            //return &double_op_reg_instruction;
             instr = &double_op_reg_instruction;
             instr->ExecuteInstruction();
-//            std::cout << "end_point############################\n";
             break;
         }
 
         case(DOUBLE_OP_INSTR):
         {
-            std::cout << "start_point!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             GetOpcodeInDoubleOpCase();
             GetMode_1_InDoubleOpCase();
             GetArg_1_InDoubleOpCase();
             GetMode_2_InDoubleOpCase();
             GetArg_2_InDoubleOpCase();
-            std::cout << "break\n";
             DoubleOpInstruction double_op_instruction(this->opcode, this->mode_1, this->arg_1, this->mode_2, this->arg_2);
-           // double_op_instruction.ExecuteInstruction();
-           //return &double_op_instruction;
             instr = &double_op_instruction;
             instr->ExecuteInstruction();
-//            std::cout << "end_point############################\n";
             break;
         }
 
@@ -280,20 +264,12 @@ Instruction* Parser::MakeParse()
 
         case(CONDITIONAL_INSTR):
         {
-            std::cout << "start_cond!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             GetOpcodeInBranchOpCase();
             GetOffsetInBranchOpCase();
             ConditionalInstruction conditional_instruction(this->opcode, this->offset);
-            //conditional_instruction.who_am_i();
-//            conditional_instruction.ExecuteInstruction();
-//            conditional_instruction.~ConditionalInstruction();
-//            return &conditional_instruction;
-
             instr = &conditional_instruction;
             std::cout << "break\n";
-            //instr->who_am_i();
             instr->ExecuteInstruction();
-           // std::cout << "end_point############################\n";
             break;
         }
     }

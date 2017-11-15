@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdint>
 #include <instruction.h>
+#include <cassert>
 
 enum wordVersusbyte{WORD, BYTE}; //The symbol "0" or "1" in an opcode refers to a 0 for the word version of the instrucion and 1 for the byte version of the instruction
 
@@ -74,7 +75,7 @@ public:
     void GetArg_2_InDoubleOpCase();
 
     /*Algorithm for parsing*/
-    Instruction *MakeParse();
+    Instruction *HandleInstruction();
 
 
 };

@@ -3,12 +3,13 @@
 #include <map>
 #include <iostream>
 
+
 class SingleOpInstruction;
 class DoubleOpInstruction;
 class DoubleOpRegInstruction;
 class ConditionalInstruction;
 
-typedef void (SingleOpInstruction::* SingleOpInstructionExecutor)();
+//typedef void (SingleOpInstruction::* SingleOpInstructionExecutor)();
 typedef void (DoubleOpInstruction::* DoubleOpInstructionExecutor)();
 typedef void (DoubleOpRegInstruction::*DoubleOpRegInstructionExecutor)();
 typedef void (ConditionalInstruction::* ConditionalInstructionExecutor)();
@@ -44,6 +45,8 @@ public:
         std::cout << "I am conditional instruction" << std::endl;
     }
 
+
+
 private:
 
     std::map<uint16_t, ConditionalInstructionExecutor> ConditionalInstructionMap;
@@ -53,10 +56,15 @@ private:
     uint16_t offset;
 
 
+
+
 };
 
 class SingleOpInstruction : public Instruction
 {
+
+    typedef void (SingleOpInstruction::* SingleOpInstructionExecutor)();
+
 public:
 
     friend class Parser;
@@ -78,41 +86,41 @@ private:
     uint16_t mode_1;
     uint16_t arg_1; // =destination
 
-//    SWAB(); //Swap bytes: rotate 8 bits //OPCODE = 0003
-//    JSR(); //	Jump to subroutine //OPCODE = 0040
-//    EMT(); //Emulator trap //OPCODE = 1040
-//    CLR(); //	Clear: dest = 0 //OPCODE = 0050
-//    CLRB (); //Clear: dest = 0 //OPCODE = 1050
-//    COM	(); //  Complement: dest = ~dest //OPCODE = 0051
-//    COMB(); // Complement: dest = ~dest //OPCODE = 1051
-//    INC(); //	Increment: dest += 1 //OPCODE = 0052
-//    INCB();//Increment: dest += 1 //OPCODE = 1052
-//    DEC(); //	Decrement: dest −= 1 //OPCODE = 0053
-//    DECB(); //Decrement: dest −= 1 //OPCODE = 1053
-//    NEG(); //	Negate: dest = −dest //OPCODE = 0054
-//    NEGB(); //Negate: dest = −dest //OPCODE = 1054
-//    ADC(); //	Add carry: dest += C //OPCODE =  0055
-//    ADCB(); //Add carry: dest += C //OPCODE = 1055
-//    SBC(); //	Subtract carry: dest −= C //OPCODE = 0056
-//    SBCB(); // Subtract carry: dest −= C//OPCODE = 1056
-//    TST();//	Test: Load src, set flags only //OPCODE = 0057
-//    TSTB(); //Test: Load src, set flags only //OPCODE = 1057
-//    ROR(); //	Rotate right 1 bit //OPCODE = 0060
-//    RORB(); //Rotate right 1 bit //OPCODE = 1060
-//    ROL(); //	Rotate left 1 bit //OPCODE = 0061
-//    ROLB(); //Rotate left 1 bit //OPCODE = 1061
-//    ASR(); //	Shift right: dest >>= 1 //OPCODE = 0062
-//    ASRB(); //Shift right: dest >>= 1 //OPCODE = 1062
-//    ASL(); //	Shift left: dest <<= 1 //OPCODE = 0063
-//    ASLB(); //Shift left: dest <<= 1 //OPCODE = 1063
-//    MARK(); //	Return from subroutine, skip 0..63 instruction words //OPCODE = 0064
-//    MTPS(); //	Move to status: PS = src //OPCODE = 1064
-//    MFPI	(); //Move from previous I space: −(SP) = src //OPCODE = 0065
-//    MFPD(); //	Move from previous D space: −(SP) = src //OPCODE =  1065
-//    MTPI	(); //Move to previous I space: dest = (SP)+ //OPCODE = 0066
-//    MTPD(); //	Move to previous D space: dest = (SP)+ //OPCODE = 1066
-//    SXT(); //	Sign extend: dest = (16 copies of N flag) //OPCODE = 0067
-//    MFPS(); //	Move from status: dest = PS //OPCODE = 1067
+    void SWAB(); //Swap bytes: rotate 8 bits //OPCODE = 0003
+    void JSR(); //	Jump to subroutine //OPCODE = 0040
+    void  EMT(); //Emulator trap //OPCODE = 1040
+    void  CLR(); //	Clear: dest = 0 //OPCODE = 0050
+    void  CLRB (); //Clear: dest = 0 //OPCODE = 1050
+    void  COM	(); //  Complement: dest = ~dest //OPCODE = 0051
+    void  COMB(); // Complement: dest = ~dest //OPCODE = 1051
+    void  INC(); //	Increment: dest += 1 //OPCODE = 0052
+    void  INCB();//Increment: dest += 1 //OPCODE = 1052
+    void  DEC(); //	Decrement: dest −= 1 //OPCODE = 0053
+    void  DECB(); //Decrement: dest −= 1 //OPCODE = 1053
+    void  NEG(); //	Negate: dest = −dest //OPCODE = 0054
+    void  NEGB(); //Negate: dest = −dest //OPCODE = 1054
+    void  ADC(); //	Add carry: dest += C //OPCODE =  0055
+    void ADCB(); //Add carry: dest += C //OPCODE = 1055
+    void  SBC(); //	Subtract carry: dest −= C //OPCODE = 0056
+    void  SBCB(); // Subtract carry: dest −= C//OPCODE = 1056
+//  void TST();//	Test: Load src, set flags only //OPCODE = 0057
+//  void  TSTB(); //Test: Load src, set flags only //OPCODE = 1057
+//  void  ROR(); //	Rotate right 1 bit //OPCODE = 0060
+//  void  RORB(); //Rotate right 1 bit //OPCODE = 1060
+//  void  ROL(); //	Rotate left 1 bit //OPCODE = 0061
+//  void  ROLB(); //Rotate left 1 bit //OPCODE = 1061
+//  void  ASR(); //	Shift right: dest >>= 1 //OPCODE = 0062
+//  void  ASRB(); //Shift right: dest >>= 1 //OPCODE = 1062
+//  void  ASL(); //	Shift left: dest <<= 1 //OPCODE = 0063
+//  void  ASLB(); //Shift left: dest <<= 1 //OPCODE = 1063
+//  void  MARK(); //	Return from subroutine, skip 0..63 instruction words //OPCODE = 0064
+//  void  MTPS(); //	Move to status: PS = src //OPCODE = 1064
+//  void  MFPI	(); //Move from previous I space: −(SP) = src //OPCODE = 0065
+//  void  MFPD(); //	Move from previous D space: −(SP) = src //OPCODE =  1065
+//  void  MTPI	(); //Move to previous I space: dest = (SP)+ //OPCODE = 0066
+//  void  MTPD(); //	Move to previous D space: dest = (SP)+ //OPCODE = 1066
+//  void  SXT(); //	Sign extend: dest = (16 copies of N flag) //OPCODE = 0067
+//  void  MFPS(); //	Move from status: dest = PS //OPCODE = 1067
 
 };
 
