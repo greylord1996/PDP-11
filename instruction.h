@@ -2,14 +2,14 @@
 #include <cstdint>
 #include <map>
 #include <iostream>
-
+#include <cpu.h>
 
 class SingleOpInstruction;
 class DoubleOpInstruction;
 class DoubleOpRegInstruction;
 class ConditionalInstruction;
 
-//typedef void (SingleOpInstruction::* SingleOpInstructionExecutor)();
+typedef void (SingleOpInstruction::* SingleOpInstructionExecutor)();
 typedef void (DoubleOpInstruction::* DoubleOpInstructionExecutor)();
 typedef void (DoubleOpRegInstruction::*DoubleOpRegInstructionExecutor)();
 typedef void (ConditionalInstruction::* ConditionalInstructionExecutor)();
@@ -17,7 +17,8 @@ typedef void (ConditionalInstruction::* ConditionalInstructionExecutor)();
 class Instruction
 {
 public:
-    //friend class Parser;
+    class CPU* cpu;
+
     Instruction();
     virtual ~Instruction();
 
@@ -37,7 +38,7 @@ class ConditionalInstruction : public Instruction
 public:
 
     ConditionalInstruction();
-    ConditionalInstruction(uint16_t opcode, uint16_t offset);
+    ConditionalInstruction(uint16_t opcode, uint16_t offset, class CPU* cpu);
     virtual ~ConditionalInstruction();
     virtual void ExecuteInstruction();
     virtual void who_am_i()
@@ -69,7 +70,7 @@ public:
 
     friend class Parser;
     SingleOpInstruction();
-    SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1);
+    SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, class CPU* cpu);
     virtual ~SingleOpInstruction();
     virtual void ExecuteInstruction();
     virtual void who_am_i()
@@ -81,6 +82,7 @@ private:
 
     std::map<uint16_t, SingleOpInstructionExecutor> SingleOpInstructionMap;
 
+    //class CPU* cpu;
     int flagOn15Bit;
     uint16_t opcode;
     uint16_t mode_1;
@@ -130,7 +132,7 @@ public:
 
     //friend class Parser;
     DoubleOpInstruction();
-    DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2);
+    DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu);
     virtual ~DoubleOpInstruction();
     virtual void ExecuteInstruction();
     virtual void who_am_i()
@@ -172,7 +174,7 @@ public:
 
     //friend class Parser;
     DoubleOpRegInstruction();
-    DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2);
+    DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu);
     virtual ~DoubleOpRegInstruction();
     virtual void ExecuteInstruction();
     virtual void who_am_i()

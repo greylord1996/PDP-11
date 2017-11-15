@@ -1,29 +1,33 @@
 #include <instruction.h>
 #include <iostream>
 #include <cassert>
+//#include <cpu.h>
 
 
-ConditionalInstruction::ConditionalInstruction(uint16_t opcode, uint16_t offset)
+ConditionalInstruction::ConditionalInstruction(uint16_t opcode, uint16_t offset, CPU *cpu)
 {
     this->opcode = opcode;
     this->offset = offset;
+    this->cpu = cpu;
 }
 
-DoubleOpInstruction::DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2)
+DoubleOpInstruction::DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu)
 {
     this->opcode = opcode;
     this->mode_1 = mode_1;
     this->arg_1 = arg_1;
     this->mode_2 = mode_2;
     this->arg_2 = arg_2;
+    this->cpu = cpu;
 }
 
-DoubleOpRegInstruction::DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2)
+DoubleOpRegInstruction::DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu)
 {
     this->opcode = opcode;
     this->arg_1 = arg_1;
     this->mode_2 = mode_2;
     this->arg_2 = arg_2;
+    this->cpu = cpu;
 }
 
 
@@ -68,12 +72,13 @@ SingleOpInstruction::SingleOpInstruction()
 
 //Constructor.
 
-SingleOpInstruction::SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1)
+SingleOpInstruction::SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, CPU *cpu)
 {
     //Init instructions parts
     this->opcode = opcode;
     this->mode_1 = mode_1;
     this->arg_1 = arg_1;
+    this->cpu = cpu;
 
     //In this constructor must be inited the functions. Here we init map <opcode, pointer to called funcion>
 
@@ -109,6 +114,7 @@ void SingleOpInstruction::ExecuteInstruction()
     std::cout << "Execute single operation instruction called\n";
     SingleOpInstructionExecutor single_op_instr_executor = this->SingleOpInstructionMap[this->opcode];
     assert(single_op_instr_executor); //BLED. Here was the complete whore
+ //   this->cpu->reg[0];//!!!!!!!!!!!!!!!!!!!!!!!!!
     (this->*single_op_instr_executor)();
 }
 

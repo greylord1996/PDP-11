@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <parser.h>
+#include <decision_maker.h>
 #include <RAM.h>
 
 class CPU
@@ -27,7 +27,7 @@ public:
 
     ~CPU();
 
-    void InstructionHandler(uint16_t  instr, CPU* cpu);
+    void ProcessInstruction(uint16_t  instr, CPU* cpu);
 
 };
 

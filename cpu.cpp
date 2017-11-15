@@ -23,9 +23,9 @@ CPU::~CPU()
 
 }
 
-void CPU::InstructionHandler(uint16_t instr, CPU *cpu)
+void CPU::ProcessInstruction(uint16_t instr, CPU *cpu)
 {
-    Parser parser(instr);
-    cpu->reg[2] = 2;
-    parser.HandleInstruction();
+    InstructionHandler instruction_handler(instr, cpu);
+    //std::cout << cpu->GetValFromRegisterByNum(0) << std::endl;
+    instruction_handler.HandleInstruction();
 }

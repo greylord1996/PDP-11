@@ -1,26 +1,17 @@
 #pragma once
 #include <iostream>
 #include <cstdint>
-#include <instruction.h>
 #include <cassert>
 
-enum wordVersusbyte{WORD, BYTE}; //The symbol "0" or "1" in an opcode refers to a 0 for the word version of the instrucion and 1 for the byte version of the instruction
 
-enum INSTRUCTION_TYPE{SINGLE_OP_INSTR, DOUBLE_OP_REG_INSTR, DOUBLE_OP_INSTR, CONDITIONAL_INSTR}; //Go to Wiki - https://en.wikipedia.org/wiki/PDP-11_architecture
 
 class Parser
 {
 public:
 
+    enum wordVersusbyte{WORD, BYTE}; //The symbol "0" or "1" in an opcode refers to a 0 for the word version of the instrucion and 1 for the byte version of the instruction
 
-
-
-//    friend class Instruction;
-//    friend class SingleOpInstruction;
-//    friend class DoubleOpInstruction;
-//    friend class DoubleOpRegInstruction;
-//    friend class ConditionalInstruction;
-
+    enum INSTRUCTION_TYPE{SINGLE_OP_INSTR, DOUBLE_OP_REG_INSTR, DOUBLE_OP_INSTR, CONDITIONAL_INSTR}; //Go to Wiki - https://en.wikipedia.org/wiki/PDP-11_architecture
 
     Parser();
     ~Parser();
@@ -34,11 +25,6 @@ public:
     uint16_t mode_2;
     uint16_t arg_2;
     uint16_t offset;
-
-
-
-
-
 
 
     Parser(uint16_t instruction_name);
@@ -73,10 +59,6 @@ public:
     void GetMode_2_InDoubleOpCase();
     void GetArg_1_InDoubleOpCase();
     void GetArg_2_InDoubleOpCase();
-
-    /*Algorithm for parsing*/
-    Instruction *HandleInstruction();
-
 
 };
 
