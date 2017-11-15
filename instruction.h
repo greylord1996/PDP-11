@@ -17,36 +17,29 @@ typedef void (ConditionalInstruction::* ConditionalInstructionExecutor)();
 class Instruction
 {
 public:
-    class CPU* cpu;
-
     Instruction();
     virtual ~Instruction();
 
+    enum wordVersusbyte{WORD, BYTE};
+    class CPU* cpu;
+
     virtual void ExecuteInstruction() = 0;
-    void privet()
-    {
-        std::cout << "!!!!\n";
-    }
-    virtual void who_am_i()
-    {
-        std::cout << "who_am_i\n";
-    }
+
+    uint16_t GetArgGeneralRegisterAddressingModes(uint16_t mode, uint16_t reg, int flagOn15Bit);
+    CPU* getCPU();
 };
+
+
 
 class ConditionalInstruction : public Instruction
 {
 public:
 
     ConditionalInstruction();
-    ConditionalInstruction(uint16_t opcode, uint16_t offset, class CPU* cpu);
+    ConditionalInstruction(uint16_t opcode, uint16_t offset, class CPU* cpu, int flagOn15Bit);
     virtual ~ConditionalInstruction();
+
     virtual void ExecuteInstruction();
-    virtual void who_am_i()
-    {
-        std::cout << "I am conditional instruction" << std::endl;
-    }
-
-
 
 private:
 
@@ -55,11 +48,9 @@ private:
     int flagOn15Bit;
     uint16_t opcode;
     uint16_t offset;
-
-
-
-
 };
+
+
 
 class SingleOpInstruction : public Instruction
 {
@@ -68,21 +59,16 @@ class SingleOpInstruction : public Instruction
 
 public:
 
-    friend class Parser;
+    //friend class Parser;
     SingleOpInstruction();
-    SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, class CPU* cpu);
+    SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, class CPU* cpu, int flagOn15Bit);
     virtual ~SingleOpInstruction();
     virtual void ExecuteInstruction();
-    virtual void who_am_i()
-    {
-        std::cout << "I am single operands instruction" << std::endl;
-    }
 
 private:
 
     std::map<uint16_t, SingleOpInstructionExecutor> SingleOpInstructionMap;
 
-    //class CPU* cpu;
     int flagOn15Bit;
     uint16_t opcode;
     uint16_t mode_1;
@@ -91,7 +77,7 @@ private:
     void SWAB(); //Swap bytes: rotate 8 bits //OPCODE = 0003
     void JSR(); //	Jump to subroutine //OPCODE = 0040
     void  EMT(); //Emulator trap //OPCODE = 1040
-    void  CLR(); //	Clear: dest = 0 //OPCODE = 0050
+    void  CLR(); //Clear: dest = 0 //OPCODE = 0050
     void  CLRB (); //Clear: dest = 0 //OPCODE = 1050
     void  COM	(); //  Complement: dest = ~dest //OPCODE = 0051
     void  COMB(); // Complement: dest = ~dest //OPCODE = 1051
@@ -128,18 +114,13 @@ private:
 
 class DoubleOpInstruction : public Instruction
 {
+
 public:
 
-    //friend class Parser;
     DoubleOpInstruction();
-    DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu);
+    DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu, int flagOn15Bit);
     virtual ~DoubleOpInstruction();
     virtual void ExecuteInstruction();
-    virtual void who_am_i()
-    {
-        std::cout << "I am double operand instruction" << std::endl;
-    }
-
 
 private:
 
@@ -167,21 +148,17 @@ private:
 //    SUB(); //Add, arg_2 += arg_1 // OPCODE = 16
 };
 
+
+
 class DoubleOpRegInstruction : public Instruction
 {
+
 public:
 
-
-    //friend class Parser;
     DoubleOpRegInstruction();
-    DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu);
+    DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, class CPU* cpu, int flagOn15Bit);
     virtual ~DoubleOpRegInstruction();
     virtual void ExecuteInstruction();
-    virtual void who_am_i()
-    {
-        std::cout << "I am double operand-register instruction" << std::endl;
-    }
-
 
 private:
 

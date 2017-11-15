@@ -4,14 +4,15 @@
 //#include <cpu.h>
 
 
-ConditionalInstruction::ConditionalInstruction(uint16_t opcode, uint16_t offset, CPU *cpu)
+ConditionalInstruction::ConditionalInstruction(uint16_t opcode, uint16_t offset, CPU *cpu, int flagOn15Bit)
 {
     this->opcode = opcode;
     this->offset = offset;
     this->cpu = cpu;
+    this->flagOn15Bit = flagOn15Bit;
 }
 
-DoubleOpInstruction::DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu)
+DoubleOpInstruction::DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu, int flagOn15Bit)
 {
     this->opcode = opcode;
     this->mode_1 = mode_1;
@@ -19,17 +20,20 @@ DoubleOpInstruction::DoubleOpInstruction(uint16_t opcode, uint16_t mode_1, uint1
     this->mode_2 = mode_2;
     this->arg_2 = arg_2;
     this->cpu = cpu;
+    this->flagOn15Bit = flagOn15Bit;
 }
 
-DoubleOpRegInstruction::DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu)
+DoubleOpRegInstruction::DoubleOpRegInstruction(uint16_t opcode, uint16_t arg_1, uint16_t mode_2, uint16_t arg_2, CPU *cpu, int flagOn15Bit)
 {
     this->opcode = opcode;
     this->arg_1 = arg_1;
     this->mode_2 = mode_2;
     this->arg_2 = arg_2;
     this->cpu = cpu;
+    this->flagOn15Bit = flagOn15Bit;
 }
 
+//Base class Instruction
 
 Instruction::Instruction()
 {
@@ -39,6 +43,102 @@ Instruction::Instruction()
 Instruction::~Instruction()
 {
 
+}
+
+uint16_t Instruction::GetArgGeneralRegisterAddressingModes(uint16_t mode, uint16_t reg, int flagOn15Bit)
+{
+    uint16_t value = 0;
+
+    switch(mode)
+    {
+        //The operand is in Rn
+        case(REGISTER):
+        {
+                value = this->cpu->GetValFromRegisterByNum(reg);
+                break;
+        }
+        //Rn contains the address of the operand
+        case(REGISTER_DEFFERED):
+        {
+            if(flagOn15Bit == WORD)
+                value = this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg));
+            else if(flagOn15Bit == BYTE)
+                value = this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg));
+            break;
+        }
+
+        //Rn contains the address of the operand, then increment Rn
+        case(AUTOINCREMENT):
+        {
+            if(flagOn15Bit == WORD)
+            {
+                value = this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg));
+                //this->cpu->reg[reg] += 2;
+                this->cpu->IncRegisterByX(reg, 2);
+            }
+
+            if(flagOn15Bit == BYTE)
+            {
+                value =  this->cpu->GetRam()->GetByteByAddr(cpu->GetValFromRegisterByNum(reg));
+                this->cpu->IncRegisterByX(reg, 1);
+            }
+
+            break;
+        }
+
+        //Rn contains the address of the address, then increment Rn by 2
+         case(AUTOINCREMENT_DEFFERED):
+        {
+            value = this->cpu->GetRam()->GetWordByAddr(this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg)));
+            this->cpu->IncRegisterByX(reg, 2);
+            break;
+        }
+
+        //Decrement Rn, then use it as the address
+        case(AUTODECREMENT):
+        {
+             if(flagOn15Bit == WORD)
+            {
+                 this->cpu->DecRegisterByX(reg, 2);
+                 value = this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg));
+            }
+
+            if(flagOn15Bit == BYTE)
+            {
+                this->cpu->DecRegisterByX(reg, 1);
+                value =  this->cpu->GetRam()->GetByteByAddr(cpu->GetValFromRegisterByNum(reg));
+             }
+
+        break;
+        }
+
+        //Decrement Rn by 2, then use it as the address of the address
+        case(AUTODECREMENT_DEFFERED):
+        {
+            this->cpu->DecRegisterByX(reg, 2);
+            value = this->cpu->GetRam()->GetWordByAddr(this->cpu->GetRam()->GetWordByAddr(cpu->GetValFromRegisterByNum(reg)));
+            break;
+        }
+
+        case(INDEX):
+        {
+
+        }
+
+        case(INDEX_DEFFERED):
+        {
+
+        }
+
+
+    }
+
+    return value;
+}
+
+CPU *Instruction::getCPU()
+{
+    return this->cpu;
 }
 
 //Single operand instruction!!! In this section all methods of class SingleOpInstruction will be implemented
@@ -72,13 +172,14 @@ SingleOpInstruction::SingleOpInstruction()
 
 //Constructor.
 
-SingleOpInstruction::SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, CPU *cpu)
+SingleOpInstruction::SingleOpInstruction(uint16_t opcode, uint16_t mode_1, uint16_t arg_1, CPU *cpu, int flagOn15Bit)
 {
     //Init instructions parts
     this->opcode = opcode;
     this->mode_1 = mode_1;
     this->arg_1 = arg_1;
     this->cpu = cpu;
+    this->flagOn15Bit = flagOn15Bit;
 
     //In this constructor must be inited the functions. Here we init map <opcode, pointer to called funcion>
 
@@ -154,6 +255,14 @@ void SingleOpInstruction::COMB()
 void SingleOpInstruction::INC()
 {
     std::cout << "INC" << std::endl;
+    uint16_t val = GetArgGeneralRegisterAddressingModes(this->mode_1, this->arg_1, this->flagOn15Bit);
+    std::cout << "val = " << val << std::endl;
+    val++;
+    this->arg_1 =val;
+    this->cpu->SetRegisterByNum(this->arg_1, val);
+
+    std::cout << "New val in register " << this->cpu->GetValFromRegisterByNum(this->arg_1)<< std::endl;
+    //return this->cpu;
 }
 
 void SingleOpInstruction::INCB()
@@ -184,10 +293,12 @@ void SingleOpInstruction::NEGB()
 void SingleOpInstruction::ADC()
 {
     std::cout << "ADC\n";
+
 }
 
 void SingleOpInstruction::ADCB()
 {
+
     std::cout << "ADCBlyat\n";
 }
 

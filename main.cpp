@@ -9,22 +9,25 @@ using namespace std;
 
 int main()
 {
-//    uint16_t instruction;
-//    std::cout << "Enter instruction " ;
-//    std::cin >> instruction;
+    uint16_t instruction;
+    std::cout << "Enter instruction " ;
+    std::cin >> instruction;
 
-//    std::string binary_code = std::bitset<16>(instruction).to_string(); //to binary
-//    std::cout << "binary_code = " << binary_code << std::endl;
+    std::string binary_code = std::bitset<16>(instruction).to_string(); //to binary
+    std::cout << "binary_code = " << binary_code << std::endl;
 
-//    CPU cpu;
-//    cpu.ProcessInstruction(instruction, &cpu);
+    CPU cpu;
+    cpu.ProcessInstruction(instruction, &cpu);
 
-    RAM ram;
+
+    std::cout << "New val in register " << cpu.GetValFromRegisterByNum(cpu.GetValFromRegisterByNum(0))<< std::endl;
+
+//    RAM ram;
     //ram.SetWordOnAddr(12, 35655);
     //ram.GetWordByAddr(12);
     //ram.GetByteByAddr(12);
-    ram.SetByteOnAddr(12, 139);
-    ram.GetByteByAddr(12);
+//    ram.SetByteOnAddr(12, 254);
+//    ram.GetByteByAddr(12);
 
 
 

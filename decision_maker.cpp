@@ -26,8 +26,9 @@ void InstructionHandler::HandleInstruction()
             parser.GetOpcodeInSingleOpCase();
             parser.GetModeInSingleCase();
             parser.GetArgs_1InSingleCase();
-            SingleOpInstruction single_op_instruction(parser.opcode, parser.mode_1, parser.arg_1, cpu);
+            SingleOpInstruction single_op_instruction(parser.opcode, parser.mode_1, parser.arg_1, cpu, parser.flagOn15Bit);
             single_op_instruction.ExecuteInstruction();
+            //return single_op_instruction.getCPU();
             break;
         }
 
@@ -37,7 +38,7 @@ void InstructionHandler::HandleInstruction()
             parser.GetArg_1_InDoubleRegOpCase();
             parser.GetMode_2_InDoubleRegOpCase();
             parser.GetArg_2_InDoubleRegOpCase();
-            DoubleOpRegInstruction double_op_reg_instruction(parser.opcode, parser.arg_1, parser.mode_2, parser.arg_2, cpu);
+            DoubleOpRegInstruction double_op_reg_instruction(parser.opcode, parser.arg_1, parser.mode_2, parser.arg_2, cpu, parser.flagOn15Bit);
             instr = &double_op_reg_instruction;
             instr->ExecuteInstruction();
             break;
@@ -50,7 +51,7 @@ void InstructionHandler::HandleInstruction()
             parser.GetArg_1_InDoubleOpCase();
             parser.GetMode_2_InDoubleOpCase();
             parser.GetArg_2_InDoubleOpCase();
-            DoubleOpInstruction double_op_instruction(parser.opcode, parser.mode_1, parser.arg_1, parser.mode_2, parser.arg_2, cpu);
+            DoubleOpInstruction double_op_instruction(parser.opcode, parser.mode_1, parser.arg_1, parser.mode_2, parser.arg_2, cpu, parser.flagOn15Bit);
             instr = &double_op_instruction;
             instr->ExecuteInstruction();
             break;
@@ -62,7 +63,7 @@ void InstructionHandler::HandleInstruction()
         {
             parser.GetOpcodeInBranchOpCase();
             parser.GetOffsetInBranchOpCase();
-            ConditionalInstruction conditional_instruction(parser.opcode, parser.offset, cpu);
+            ConditionalInstruction conditional_instruction(parser.opcode, parser.offset, cpu, parser.flagOn15Bit);
             instr = &conditional_instruction;
             std::cout << "break\n";
             instr->ExecuteInstruction();
